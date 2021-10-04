@@ -25,13 +25,9 @@ public class InventoryLog implements Inventory{
 //    remove all occurrences of c from the arrayList
     @Override
     public void subtract(char c) {
-//        log.removeAll(Collections.singleton(c));
-        ArrayList<Character> l = new ArrayList<>();
-        l.add(c);
-        log.removeAll(l);
+        log.removeAll(Collections.singleton(c));
     }
 
-    // rest should behave similar to the methods in LetterInventory
     @Override
     public int get(char c) {
         int count = 0;
@@ -46,44 +42,42 @@ public class InventoryLog implements Inventory{
         return -1;
     }
 
-    // may be decided, but solution should be sound and should include javadoc
 
     /**
-     * Adds c to the list count number of times if c is a letter and count > 0
+     * Makes c appears in the list count number of times
      *
-     * @param c     character to update in inventory, throws IllegalArgumentException if character not in inventory
+     * If count is more than the number of Cs in the list, c is increased to count,
+     * else, c is reduced to count
+     *
+     * @param c     character to update in inventory, throws IllegalArgumentException if character is not a letter
      * @param count number to update count with, throws IllegalArgumentException if negative
      */
     @Override
     public void set(char c, int count) {
-
-        // method changes the count
-        if(Character.isLetter(c) && count > 0){
+        if(!Character.isLetter(c) && count < 0)
+            throw new IllegalArgumentException(c + " is not a valid entry.");
+        else{
             int num = 0;
-            for (int i = 0; i < log.size(); i++){
-                if(c == log.get(i)){
+            for (Character character : log) {
+                if (c == character) {
                     num++;
                 }
             }
+            // determines if c should be increased, reduced, or removed entirely
             num = count - num;
             if(num > 0){
                 for (int i = 0; i < num; i++){
                     log.add(c);
                 }
             } else if(num < 0) {
-               while (num)/*for (int i = 0; i > num; num++)*/{
-                    if(c == log.get(i)){
-                        log.remove(i);
-                        num++;
-                        if(num == 0){
-                            break;
-                        }
-                    }
-//                    log.re(c);
+                log.removeAll(Collections.singleton(c));
+                for (int i = 0; i < count; i++){
+                    log.add(c);
                 }
+            } else {
+                log.removeAll(Collections.singleton(c));
             }
-        } else
-            throw new IllegalArgumentException(c + " is not a valid entry.");
+        }
     }
 
     @Override
@@ -103,6 +97,10 @@ public class InventoryLog implements Inventory{
 
     @Override
     public String toString(){
-
+        StringBuilder stringReturn = new StringBuilder("[");
+        for (Character character : log) {
+            stringReturn.append(character);
+        }
+        return  stringReturn.append("]").toString();
     }
 }
