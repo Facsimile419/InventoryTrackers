@@ -54,8 +54,10 @@ public class InventoryLog implements Inventory{
      */
     @Override
     public void set(char c, int count) {
-        if(!Character.isLetter(c) && count < 0)
-            throw new IllegalArgumentException(c + " is not a valid entry.");
+        if(!Character.isLetter(c))
+            throw new IllegalArgumentException(c + " is not a letter");
+        if(count < 0)
+            throw new IllegalArgumentException(c + " is less than 0");
         else{
             int num = 0;
             for (Character character : log) {
